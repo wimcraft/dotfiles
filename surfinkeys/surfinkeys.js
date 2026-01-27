@@ -1,5 +1,5 @@
 // permalink:
-// https://gist.githubusercontent.com/rfist/fb099ce9c5825740a8a439958abd4af8/raw/surfingkeys.txt
+// https://raw.githubusercontent.com/rfist/dotfiles/refs/heads/main/surfinkeys/surfinkeys.js
 const {
     unmapAllExcept,
     mapkey,
@@ -7,6 +7,7 @@ const {
     unmap,
     map,
     Hints,
+    Visual,
     Clipboard,
     Front,
     aceVimMap,
@@ -84,6 +85,7 @@ map('O', ';U');
 // map('F', 'C'); 
 cmap('<Ctrl-n>', '<Tab>');
 cmap('<Ctrl-p>', '<Shift-Tab>');
+map('oo','t'); // map oo as omni bar
 
 mapkey('gP', 'Go to the Pull requests tab.  ', function () {
     document.querySelectorAll('#pull-requests-tab')[0].click()
@@ -98,4 +100,9 @@ mapkey('h', 'Go to the parent folder.  ', function () {
     domain: /drive\.google/i
 });
 
+// Nord
+Hints.style('border: solid 2px #4C566A; color:#A3BE8C; background: initial; background-color: #3B4252;');
+Hints.style("border: solid 2px #4C566A !important; padding: 1px !important; color: #E5E9F0 !important; background: #3B4252 !important;", "text");
+Visual.style('marks', 'background-color: #A3BE8C99;');
+Visual.style('cursor', 'background-color: #88C0D0;');
 
