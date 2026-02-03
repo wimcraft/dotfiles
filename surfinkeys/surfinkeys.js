@@ -28,6 +28,8 @@ unmapAllExcept(['E','R','T', 'B', 'S', 'D'], /inoreader.com/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'j', 'k'], /rss./);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', '<Ctrl-d>'], /meet.google.com/);
 unmapAllExcept(['E','R','T', 'S', 'D', '<Ctrl-d>'], /calendar.notion.so/);
+unmapAllExcept(['E','R','T', 'B', 'S', 'D'], /kagi.com/); 
+unmapAllExcept(['E','R','T', 'B', 'S', 'D'], /rememberthemilk.com/);
 // now emoji is disabled by default, let's turn them back on
 settings.enableEmojiInsertion = false;
 // disable Emoji completion for web applications
