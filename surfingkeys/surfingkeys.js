@@ -10,6 +10,7 @@ const {
     Visual,
     Clipboard,
     Front,
+    Normal,
     aceVimMap,
     iunmap,
     imap
