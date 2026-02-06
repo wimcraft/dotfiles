@@ -1,5 +1,5 @@
 // permalink:
-// https://raw.githubusercontent.com/rfist/dotfiles/refs/heads/main/surfinkeys/surfinkeys.js
+// https://raw.githubusercontent.com/rfist/dotfiles/refs/heads/main/surfingkeys/surfingkeys.js
 const {
     unmapAllExcept,
     mapkey,
@@ -109,4 +109,3 @@ Hints.style('border: solid 2px #4C566A; color:#A3BE8C; background: initial; back
 Hints.style("border: solid 2px #4C566A !important; padding: 1px !important; color: #E5E9F0 !important; background: #3B4252 !important;", "text");
 Visual.style('marks', 'background-color: #A3BE8C99;');
 Visual.style('cursor', 'background-color: #88C0D0;');
-
