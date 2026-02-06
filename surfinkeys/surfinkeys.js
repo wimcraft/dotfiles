@@ -22,14 +22,15 @@ settings.tabsMRUOrder = false;
 // do not focus on input on page loaded
 settings.stealFocusOnLoad = false;
 // only keep tab navigation for calendar & email
-unmapAllExcept(['E','R','T', 'B', 'F', 'm', '\'', 'p', 'b', 'f'], /calendar.google.com|mail.google.com|drive.google.com|youtube.com|music.youtube.com|trello.com/);
+unmapAllExcept(['E','R','T', 'B', 'F', 'm', '\'', 'p', 'b', 'f', 'y'], /calendar.google.com|mail.google.com|drive.google.com|youtube.com|music.youtube.com|trello.com/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'f', 'u', 'd', 'p'], /twitter.com/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D'], /inoreader.com/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'j', 'k'], /rss./);
-unmapAllExcept(['E','R','T', 'B', 'S', 'D', '<Ctrl-d>'], /meet.google.com/);
+unmapAllExcept(['E','R','T', 'B', 'S', 'D', '<Ctrl-d>', 'M', "'"], /meet.google.com/);
 unmapAllExcept(['E','R','T', 'S', 'D', '<Ctrl-d>'], /calendar.notion.so/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D'], /kagi.com/); 
-unmapAllExcept(['E','R','T', 'B', 'S', 'D'], /rememberthemilk.com/);
+unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M', "'"], /rememberthemilk.com/);
+unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M', "'", 'f'], /checkvist.com/);
 // now emoji is disabled by default, let's turn them back on
 settings.enableEmojiInsertion = false;
 // disable Emoji completion for web applications
@@ -77,6 +78,7 @@ mapkey('<Alt-l>', 'Click Clear filters button', function() {
 });
 
 //// scroll
+map('M', 'm') // mark page
 map('<Ctrl-d>', 'd'); // half scroll down
 map('<Ctrl-u>', 'e'); // half scroll up
 // easy enter fullscreen
