@@ -30,13 +30,18 @@ unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M', 'j', 'k'], /rss./);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', '<Ctrl-d>', 'M', "'"], /meet.google.com/);
 unmapAllExcept(['E','R','T', 'S', 'D', 'M', '<Ctrl-d>'], /calendar.notion.so/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M'], /kagi.com/); 
-unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M', "'"], /rememberthemilk.com/);
+unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'm', 'M', "'"], /rememberthemilk.com/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M', "'", 'f'], /checkvist.com/);
 // now emoji is disabled by default, let's turn them back on
 settings.enableEmojiInsertion = false;
 // disable Emoji completion for web applications
 iunmap(":", /telegram.org|slack.com|kibana|teams.microsoft.com|discord.com/);
 // imap(',,', "<Esc>");        // press comma twice to leave current input box.
+//
+mapkey('M', '# Pass through for 3s', () => {
+  Normal.passThrough(3000);  // Enter PassThrough mode
+});
+
 
 // setup Ace Vim
 aceVimMap('jj', '<Esc>', 'insert');
