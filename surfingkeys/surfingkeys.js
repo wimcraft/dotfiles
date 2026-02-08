@@ -84,7 +84,6 @@ mapkey('<Alt-l>', 'Click Clear filters button', function() {
 });
 
 //// scroll
-mapkey('M', '#10Add current URL to vim-like marks', Normal.addVIMark);
 map('<Ctrl-d>', 'd'); // half scroll down
 map('<Ctrl-u>', 'e'); // half scroll up
 // easy enter fullscreen
