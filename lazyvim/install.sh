@@ -39,7 +39,7 @@ main() {
 
   local tmpdir
   tmpdir="$(mktemp -d)"
-  trap 'rm -rf "$tmpdir"' EXIT
+  trap 'if [ -n "${tmpdir:-}" ]; then rm -rf "$tmpdir"; fi' EXIT
 
   echo "Cloning LazyVim starter..."
   git clone "$STARTER_REPO" "$tmpdir/starter"
