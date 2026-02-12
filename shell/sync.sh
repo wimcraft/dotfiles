@@ -67,8 +67,10 @@ main() {
 
   append_common_bridge_if_missing "$HOME/.bashrc"
   append_common_bridge_if_missing "$HOME/.zshrc"
-  append_line_if_missing "$HOME/.bash_profile" '[[ -f ~/.bashrc ]] && source ~/.bashrc'
-  append_line_if_missing "$HOME/.zprofile" '[[ -f ~/.zshrc ]] && source ~/.zshrc'
+
+  # Add manual reload aliases in profiles.
+  append_line_if_missing "$HOME/.bash_profile" "alias sourcerc='[ -f ~/.bashrc ] && source ~/.bashrc'"
+  append_line_if_missing "$HOME/.zprofile" "alias sourcerc='[ -f ~/.zshrc ] && source ~/.zshrc'"
 
   echo "✓ Shell sync complete"
 }
