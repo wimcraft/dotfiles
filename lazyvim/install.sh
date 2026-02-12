@@ -84,12 +84,17 @@ main() {
   require_cmd git
   require_cmd mktemp
 
+  local tmpdir
+  tmpdir="$(mktemp -d)"
+  trap 'if [ -n "${tmpdir:-}" ]; then rm -rf "$tmpdir"; fi' EXIT
+
   mkdir -p "${HOME}/.config"
 
   if [ -L "$TARGET_DIR" ]; then
-    echo "Error: $TARGET_DIR is a symlink."
-    echo "Run 'just sync lazyvim' for stow-based config, or remove the symlink first."
-    exit 1
+    echo "• $TARGET_DIR is a symlink (stow-managed), skipping starter reinstall"
+    install_nerd_font
+    echo "✓ Font setup complete (use 'just sync lazyvim' for config updates)"
+    return
   fi
 
   if is_non_empty_dir "$TARGET_DIR"; then
@@ -97,10 +102,6 @@ main() {
     mv "$TARGET_DIR" "$backup_path"
     echo "✓ Backed up existing config -> $backup_path"
   fi
-
-  local tmpdir
-  tmpdir="$(mktemp -d)"
-  trap 'if [ -n "${tmpdir:-}" ]; then rm -rf "$tmpdir"; fi' EXIT
 
   echo "Cloning LazyVim starter..."
   git clone "$STARTER_REPO" "$tmpdir/starter"
