@@ -28,6 +28,14 @@ stow -D --target="$HOME/.config" lazyvim
 - `just install lazyvim`
   - Installs LazyVim starter into `~/.config/nvim`
   - Backs up existing non-empty `~/.config/nvim` to `~/.config/nvim.bak.<timestamp>`
+  - Installs `JetBrainsMono` Nerd Font automatically (best-effort)
 - `just sync lazyvim`
   - Stows `lazyvim/nvim` into `~/.config/nvim`
   - Backs up existing non-symlink `~/.config/nvim` to `~/.config/nvim.bak.<timestamp>`
+
+## Font Installation Controls
+
+- `LAZYVIM_INSTALL_FONT=0 just install lazyvim`
+  - Skip automatic Nerd Font installation.
+- `LAZYVIM_NERD_FONT_NAME=FiraCode just install lazyvim`
+  - Install a different Nerd Font release zip name.
