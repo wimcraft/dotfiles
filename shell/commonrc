@@ -1,11 +1,10 @@
 # Polyglot common shell config (bash + zsh)
 # This file is intended to be sourced from ~/.bashrc and ~/.zshrc.
 
-if [ -n "${COMMONRC_SOURCED:-}" ]; then
+if [ "${COMMONRC_SOURCED_PID:-}" = "$$" ]; then
   return 0
 fi
-COMMONRC_SOURCED=1
-export COMMONRC_SOURCED
+COMMONRC_SOURCED_PID="$$"
 
 # Global exports
 export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:/sbin:/usr/sbin:$PATH"
