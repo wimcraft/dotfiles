@@ -1,11 +1,6 @@
 # Polyglot common shell config (bash + zsh)
 # This file is intended to be sourced from ~/.bashrc and ~/.zshrc.
 
-if [ "${COMMONRC_SOURCED_PID:-}" = "$$" ]; then
-  return 0
-fi
-COMMONRC_SOURCED_PID="$$"
-
 # Global exports
 export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:/sbin:/usr/sbin:$PATH"
 export SUDO_EDITOR="nvim"
@@ -161,26 +156,30 @@ if [ -n "${ZSH_VERSION:-}" ]; then
   # Linuxbrew path (if present)
   [ -d /home/linuxbrew/.linuxbrew/bin ] && export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
 
-  # Antigen + plugins
-  if [[ ! -d "$HOME/.zsh/antigen" ]]; then
-    git clone https://github.com/zsh-users/antigen.git "$HOME/.zsh/antigen"
-  fi
+  # Antigen + plugins (init once per shell process)
+  if [ -z "${COMMONRC_ZSH_ANTIGEN_INIT:-}" ]; then
+    if [[ ! -d "$HOME/.zsh/antigen" ]]; then
+      git clone https://github.com/zsh-users/antigen.git "$HOME/.zsh/antigen"
+    fi
 
-  if [ -f "$HOME/.zsh/antigen/antigen.zsh" ]; then
-    source "$HOME/.zsh/antigen/antigen.zsh"
-    antigen use oh-my-zsh
-    antigen bundle git
-    antigen bundle command-not-found
-    command -v fuck >/dev/null && antigen bundle thefuck
-    command -v fzf >/dev/null && antigen bundle fzf
-    antigen bundle pip
-    antigen bundle sindresorhus/pure --branch=main
-    antigen bundle npm
-    antigen bundle zsh-users/zsh-autosuggestions
-    antigen bundle zsh-users/zsh-syntax-highlighting
-    antigen bundle zsh-users/zsh-completions
-    antigen bundle jeffreytse/zsh-vi-mode
-    antigen apply
+    if [ -f "$HOME/.zsh/antigen/antigen.zsh" ]; then
+      source "$HOME/.zsh/antigen/antigen.zsh"
+      antigen use oh-my-zsh
+      antigen bundle git
+      antigen bundle command-not-found
+      command -v fuck >/dev/null && antigen bundle thefuck
+      command -v fzf >/dev/null && antigen bundle fzf
+      antigen bundle pip
+      antigen bundle sindresorhus/pure --branch=main
+      antigen bundle npm
+      antigen bundle zsh-users/zsh-autosuggestions
+      antigen bundle zsh-users/zsh-syntax-highlighting
+      antigen bundle zsh-users/zsh-completions
+      antigen bundle jeffreytse/zsh-vi-mode
+      antigen apply
+    fi
+
+    COMMONRC_ZSH_ANTIGEN_INIT=1
   fi
 
   command -v fuck >/dev/null && eval "$(thefuck --alias)"
