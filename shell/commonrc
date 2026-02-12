@@ -1,0 +1,199 @@
+# Polyglot common shell config (bash + zsh)
+# This file is intended to be sourced from ~/.bashrc and ~/.zshrc.
+
+if [ -n "${COMMONRC_SOURCED:-}" ]; then
+  return 0
+fi
+COMMONRC_SOURCED=1
+export COMMONRC_SOURCED
+
+# Global exports
+export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:/sbin:/usr/sbin:$PATH"
+export SUDO_EDITOR="nvim"
+export VISUAL="nvim"
+export EDITOR="nvim"
+export HISTSIZE=1000000
+export HISTFILESIZE=2000000
+export HISTIGNORE="history:ls:pwd:"
+export FZF_DEFAULT_COMMAND="find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './dist/*'"
+
+# Locale settings (helps font rendering on some systems)
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# Global aliases
+alias cp='cp -rv'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias k='kubectl'
+alias nvim='LC_TIME=C nvim'
+alias docker-compose='docker compose'
+alias gsb='git status -sb'
+alias gss='git status -s'
+alias gf='git fetch'
+alias gpr='git pull --rebase'
+alias gpra='git pull --rebase --autostash'
+alias gprav='git pull --rebase --autostash -v'
+alias current_branch='git rev-parse --abbrev-ref HEAD'
+alias ggp='git push origin $(current_branch)'
+alias ggu='git pull --rebase origin $(current_branch)'
+
+# Helper functions
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+
+ffind() {
+  find . -type f -name "*$1*" | fzf
+}
+
+git_main_branch() {
+  local branch
+  branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+  echo "$branch"
+}
+
+fbr() {
+  local branches branch
+  branches=$(git --no-pager branch -vv) &&
+    branch=$(echo "$branches" | fzf +m) &&
+    git checkout "$(echo "$branch" | awk '{print $1}' | sed 's/.* //')"
+}
+
+fzf-git-branch() {
+  git rev-parse HEAD >/dev/null 2>&1 || return
+
+  git branch --color=always --all --sort=-committerdate |
+    grep -v HEAD |
+    fzf --height 50% --ansi --no-multi --preview-window right:65% \
+      --preview 'git log -n 50 --color=always --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed "s/.* //" <<< {})' |
+    sed 's/.* //'
+}
+
+fzf-git-checkout() {
+  git rev-parse HEAD >/dev/null 2>&1 || return
+
+  local branch
+  branch=$(fzf-git-branch)
+
+  if [ -z "$branch" ]; then
+    echo "No branch selected."
+    return
+  fi
+
+  if [[ "$branch" = 'remotes/'* ]]; then
+    git checkout --track "$branch"
+  else
+    git checkout "$branch"
+  fi
+}
+
+lfcd() {
+  tmp="$(mktemp)"
+  lf -last-dir-path="$tmp" "$@"
+  if [ -f "$tmp" ]; then
+    dir="$(cat "$tmp")"
+    rm -f "$tmp"
+    if [ -d "$dir" ] && [ "$dir" != "$(pwd)" ]; then
+      cd "$dir"
+    fi
+  fi
+}
+
+# zoxide
+if command -v zoxide >/dev/null 2>&1; then
+  if [ -n "${BASH_VERSION:-}" ]; then
+    eval "$(zoxide init bash)"
+  elif [ -n "${ZSH_VERSION:-}" ]; then
+    eval "$(zoxide init zsh)"
+  fi
+fi
+
+# Bash-only config
+if [ -n "${BASH_VERSION:-}" ]; then
+  # interactive-only section
+  case $- in
+    *i*) ;;
+    *) return 0 ;;
+  esac
+
+  HISTCONTROL=ignoreboth
+  shopt -s histappend
+  shopt -s checkwinsize
+
+  [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+  # prompt
+  current_command() {
+    local history_line
+    history_line="$(history 1)"
+    echo "${history_line##*([[:space:])+([[:digit:]])+([[:space:]])}"
+  }
+
+  PROMPT_COMMAND='history -a'
+  PS0='\[\e]0;$(current_command)\a\]'
+  PS1='[ \[\033[01;32m\]λ \W \[\033[0m\]] '
+
+  # completions and key bindings
+  if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+      . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+      . /etc/bash_completion
+    fi
+  fi
+
+  bind 'set completion-ignore-case on'
+  bind 'set show-all-if-ambiguous on'
+  bind TAB:menu-complete
+
+  set -o vi
+fi
+
+# Zsh-only config
+if [ -n "${ZSH_VERSION:-}" ]; then
+  # interactive-only section
+  [[ $- == *i* ]] || return 0
+
+  # Linuxbrew path (if present)
+  [ -d /home/linuxbrew/.linuxbrew/bin ] && export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
+
+  # Antigen + plugins
+  if [[ ! -d "$HOME/.zsh/antigen" ]]; then
+    git clone https://github.com/zsh-users/antigen.git "$HOME/.zsh/antigen"
+  fi
+
+  if [ -f "$HOME/.zsh/antigen/antigen.zsh" ]; then
+    source "$HOME/.zsh/antigen/antigen.zsh"
+    antigen use oh-my-zsh
+    antigen bundle git
+    antigen bundle command-not-found
+    command -v fuck >/dev/null && antigen bundle thefuck
+    command -v fzf >/dev/null && antigen bundle fzf
+    antigen bundle pip
+    antigen bundle sindresorhus/pure --branch=main
+    antigen bundle npm
+    antigen bundle zsh-users/zsh-autosuggestions
+    antigen bundle zsh-users/zsh-syntax-highlighting
+    antigen bundle zsh-users/zsh-completions
+    antigen bundle jeffreytse/zsh-vi-mode
+    antigen apply
+  fi
+
+  command -v fuck >/dev/null && eval "$(thefuck --alias)"
+
+  autoload -U promptinit
+  promptinit
+  prompt pure
+
+  setopt nosharehistory
+  setopt noextendedhistory
+  HISTFILE="$HOME/.bash_history"
+  SAVEHIST=10000000
+  setopt INC_APPEND_HISTORY
+  setopt HIST_IGNORE_DUPS
+fi

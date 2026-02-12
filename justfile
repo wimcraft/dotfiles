@@ -6,6 +6,7 @@ default:
 # List supported package names.
 packages:
   @echo "lazyvim"
+  @echo "shell"
 
 # Install a managed package.
 install package:
@@ -18,5 +19,6 @@ install package:
 sync package:
   case "{{package}}" in \
     lazyvim) ./lazyvim/sync.sh ;; \
+    shell) ./shell/sync.sh ;; \
     *) echo "Unknown package: {{package}}" >&2; echo "Try: just packages" >&2; exit 1 ;; \
   esac
