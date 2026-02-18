@@ -24,6 +24,7 @@ settings.tabsMRUOrder = false;
 settings.stealFocusOnLoad = false;
 // only keep tab navigation for calendar & email
 unmapAllExcept(['E','R','T', 'B', 'F', 'm', 'M', '\'', 'p', 'b', 'f'], /calendar.google.com|mail.google.com|drive.google.com|youtube.com|music.youtube.com|trello.com/);
+unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M', 'p'], /app.gather.town/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M', 'f', 'u', 'd', 'p'], /twitter.com/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M'], /inoreader.com/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M', 'j', 'k'], /rss./);
