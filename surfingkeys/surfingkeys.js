@@ -77,6 +77,11 @@ mapkey('yM', 'Copy url as markdown link', function() {
     `[${document.title}](${window.location['href']})`,
   )
 });
+mapkey('yD', 'Copy url as org-mode link', function() {
+      Clipboard.write(
+    `[[${window.location['href']}][${document.title}]]`,
+  )
+});
 // jira
 mapkey('<Alt-l>', 'Click Clear filters button', function() {
     // Find element by class and click it
