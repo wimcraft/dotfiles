@@ -6,12 +6,14 @@ default:
 # List supported package names.
 packages:
   @echo "lazyvim"
+  @echo "jetbrains"
   @echo "shell"
 
 # Install a managed package.
 install package:
   case "{{package}}" in \
     lazyvim) ./lazyvim/install.sh ;; \
+    jetbrains) just jetbrains-vimrc ;; \
     *) echo "Unknown package: {{package}}" >&2; echo "Try: just packages" >&2; exit 1 ;; \
   esac
 
@@ -19,6 +21,12 @@ install package:
 sync package:
   case "{{package}}" in \
     lazyvim) ./lazyvim/sync.sh ;; \
+    jetbrains) just jetbrains-vimrc ;; \
     shell) ./shell/sync.sh ;; \
     *) echo "Unknown package: {{package}}" >&2; echo "Try: just packages" >&2; exit 1 ;; \
   esac
+
+# Link IdeaVim config for JetBrains IDEs to ~/.ideavimrc.
+jetbrains-vimrc:
+  ln -sfn "$PWD/jetbrains/ideavimrc" "$HOME/.ideavimrc"
+  @echo "Linked $HOME/.ideavimrc -> $PWD/jetbrains/ideavimrc"

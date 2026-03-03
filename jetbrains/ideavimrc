@@ -1,0 +1,225 @@
+" Disable bloody bell
+set visualbell
+
+" Enable which-key extension
+set which-key
+
+" Disable which-key timeout, i.e. show the menu until you press a key
+set notimeout
+
+" increase the timeoutlen (default: 1000)
+set timeoutlen = 500
+
+" make the popup appear much slower
+let g:WhichKey_DefaultDelay = 100
+
+" Can not be remapped, but can be rebuilt with proper keybindings
+" https://youtrack.jetbrains.com/issue/VIM-2372/Remap-NERDTree-default-keys
+set NERDTree
+
+set commentary
+
+" set sneak
+set quickscope
+
+set surround
+set textobj-indent
+
+let mapleader = " "
+
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set showmode
+" set easymotion
+" set nonumber
+set number
+set relativenumber
+set scrolloff=3
+set history=100000
+
+map <C-o> <Action>(Back)
+map <C-i> <Action>(Forward)
+
+map <leader>d "_d
+" easy access to the black hole register
+nnoremap Q  "_
+" use ; for registers in Visual mode
+vnoremap ; "
+
+" Go to tab by number
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+" noremap <leader>0 :tablast<cr>
+noremap <leader>0 :action GoToLastTab<CR>
+
+nnoremap <Left> :action PreviousTab<CR>
+nnoremap <Right> :action NextTab<CR>
+
+nnoremap yow :action EditorToggleUseSoftWraps<CR>
+map gp :action ParameterInfo<CR>
+noremap ge :action GotoNextError<CR>
+map [c :action VcsShowPrevChangeMarker<CR>
+map ]c :action VcsShowNextChangeMarker<CR>
+map gH :action VcsShowPrevChangeMarker<CR>
+map gh :action VcsShowNextChangeMarker<CR>
+nmap <leader>hu :action Vcs.RollbackChangedLines<CR>
+nnoremap gi :action GotoImplementation<CR>
+nnoremap gn :action RenameElement<CR>
+nnoremap gr :action ShowUsages<CR>
+nnoremap <leader>, :action SearchEverywhere<CR>
+nnoremap ,, ,
+nmap <leader>space :action SearchEverywhere<CR>
+nmap U :action SearchEverywhere<CR>
+nnoremap ,f :action FindInPath<CR>
+nnoremap ,s :action FileStructurePopup<CR>
+nnoremap ,r :action RecentFiles<CR>
+nnoremap gD <C-w>o<C-w>vgd
+nnoremap <C-w>d <C-w>o<C-w>v
+
+" AceJump
+nmap s <Action>(AceAction)
+" nmap S <Plug>(easymotion-F)
+" nmap s <Plug>(easymotion-s)
+" nmap f <Plug>(easymotion-s2)
+" nmap F <Plug>(easymotion-wl)
+
+" nmap <leader>ll <Plug>(easymotion-lineforward)
+" nmap <leader>h <Plug>(easymotion-linebackward)
+" nmap <leader>j <Plug>(easymotion-j)
+" nmap <leader>k <Plug>(easymotion-k)
+
+nnoremap <leader>bb :action ShowBookmarks<CR>
+nnoremap <leader>gt :action GotoTest<CR>
+nnoremap <leader>gi :action GotoImplementation<CR>
+nnoremap <leader>gs :action GotoSuperMethod<CR>
+nnoremap <leader>og :action Github.Open.In.Browser<CR>
+nnoremap <leader>fU :action FindUsages<cr>
+nnoremap <leader>fu :action ShowUsages<CR>
+nnoremap <leader>fr :action RecentFiles<CR>
+nnoremap <leader>fp :action ShowFilePath<CR>
+nnoremap <leader>nb :action ShowNavBar<CR>
+nnoremap <leader>nn :action RecentFiles<CR>
+nnoremap <leader>rn :action RenameElement<CR>
+
+nnoremap <leader>jj :action ActivateTerminalToolWindow<CR>
+
+"nmap <leader><space>s :action KJumpAction<cr>
+"nmap <leader><space>w :action KJumpAction.Word0<cr>
+"nmap <leader><space>l :action KJumpAction.Line<cr>
+"nmap <leader><space>t :action KJumpAction.Char2<cr>
+
+nnoremap <c-p> :action GotoFile<CR>
+nnoremap <c-q> :action Switcher<CR>
+
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+
+noremap <C-W>m :action TabShiftActions.ToggleMaximizeRestore<CR>
+" Copy paste
+vmap Y "+y
+vmap <C-y> "+y
+" imap <C-V>      <Esc>"+gpa
+cmap <C-V>      <C-R>+
+imap <C-V>      <C-R>+
+"nmap <Leader>a ggVG
+"
+let g:WhichKeyDesc_windows        = "<leader>w  Windows"
+let g:WhichKeyDesc_windows_delete = "<leader>wd delete"
+let g:WhichKeyDesc_windows_split  = "<leader>ws split below"
+nmap <leader>wo :action HideAllWindows<CR>
+nmap <leader>wz :action ToggleDistractionFreeMode<CR>
+
+let g:WhichKeyDesc_l = "<leader>l    +lsp"
+let g:WhichKeyDesc_l_fix = "<leader>lf EsLint fix all"
+nmap <leader>lf :action Javascript.Linters.EsLint.Fix<CR>
+let g:WhichKeyDesc_l_rename = "<leader>lr RenameElement"
+nmap <leader>lr :action RenameElement<CR>
+
+let g:WhichKeyDesc_l_reformat = "<leader>lp reformat code"
+nmap <leader>lp :action ReformatCode<CR>
+
+let g:WhichKeyDesc_Explorer = "<leader>e    +project window(explorer)"
+
+let g:WhichKeyDesc_Explorer_Select = "<leader>er select in project window"
+map <leader>er :action SelectInProjectView<CR>
+let g:WhichKeyDesc_Explorer_Show = "<leader>ee activate project window"
+map <leader>ee :action ActivateProjectToolWindow<CR>
+
+" Reload .ideavimrc
+nmap <leader>R :source ~/.ideavimrc<CR>
+vmap <leader>R :<Backspace><Backspace><Backspace><Backspace><Backspace>source ~/.ideavimrc<CR>
+
+let g:WhichKeyDesc_Run = "<leader>r    +run/debug"
+
+let g:WhichKeyDesc_Run_Current = "<leader>rr current configuration"
+map <leader>rr :action Run<CR>
+let g:WhichKeyDesc_Run_Select = "<leader>rs select configuration"
+map <leader>rs :action ChooseRunConfiguration<CR>
+
+map <leader>zi :action EditorIncreaseFontSize<CR>
+map <leader>zo :action EditorDecreaseFontSize<CR>
+map <leader>zr :action EditorResetFontSize<CR>
+
+map <leader>; :action GotoAction<CR>
+map <leader><leader> :action GotoAction<CR>
+
+map <leader>pp :action ManageRecentProjects<CR>
+
+map <leader>tg :action CodeGlance.toggle<CR>
+
+" repeat last command
+noremap <leader><C-r> @:<CR>
+
+"Quickly edit/reload the vimrc file
+nmap <leader>ev :e ~/.ideavimrc<CR>
+nmap <leader>sv :so ~/.ideavimrc<CR>
+
+" quicker access to [m]assive word, [q]uote, [z]ingle quote, inline cod[e],
+" [r]ectangular bracket, and [c]urly braces
+onoremap am aW
+onoremap im iW
+onoremap aq a"
+onoremap iq i"
+onoremap k i"
+onoremap az a'
+onoremap iz i'
+onoremap ae a`
+onoremap ie i`
+onoremap ir i[
+onoremap ar a[
+onoremap ac a{
+onoremap ic i{
+
+vnoremap am aW
+vnoremap im iW
+vnoremap aq a"
+vnoremap iq i"
+vnoremap ay a'
+vnoremap iy i'
+vnoremap ae a`
+vnoremap ie i`
+vnoremap ir i[
+vnoremap ar a[
+vnoremap ac a{
+vnoremap ic i{
+
+" emulate some text objects from nvim-various-textobjs
+onoremap rg G
+vnoremap rg G
+onoremap rp }
+vnoremap rp }
+onoremap m t]
+vnoremap m t]
+onoremap w t"
+vnoremap w t"
