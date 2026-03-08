@@ -34,6 +34,7 @@ unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M'], /kagi.com/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'm', 'M', "'"], /rememberthemilk.com/);
 unmapAllExcept(['E','R','T', 'B', 'S', 'D', 'M', "'", 'f'], /checkvist.com/);
 unmapAllExcept([], /guacamole/);
+unmapAllExcept([], /\.ts\.net/); // tailscale funnel
 // now emoji is disabled by default, let's turn them back on
 settings.enableEmojiInsertion = false;
 // disable Emoji completion for web applications
