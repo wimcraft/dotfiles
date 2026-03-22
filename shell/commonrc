@@ -36,6 +36,14 @@ alias gprav='git pull --rebase --autostash -v'
 alias current_branch='git rev-parse --abbrev-ref HEAD'
 alias ggp='git push origin $(current_branch)'
 alias ggu='git pull --rebase origin $(current_branch)'
+# Zellij aliases
+alias zj='zellij'                                       # Short alias
+alias zzz='zellij -l tmux'                              # Start with tmux layout
+alias zls='zellij ls'                                   # List sessions
+alias zat='zellij attach $(zellij ls -s | fzf)'         # Attach with fzf
+alias zclean='zellij delete-all-sessions -y'            # Delete all dead sessions
+alias zkill='zellij kill-session $(zellij ls -s | fzf)' # Kill session with fzf
+zn() { zellij -s "$1" -l tmux; }                        # New named session
 
 # Helper functions
 mkcd() {
