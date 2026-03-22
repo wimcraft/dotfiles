@@ -9,6 +9,7 @@ packages:
   @echo "jetbrains"
   @echo "shell"
   @echo "hammerspoon"
+  @echo "zellij"
 
 # Install a managed package.
 install package:
@@ -25,6 +26,7 @@ sync package:
     jetbrains) just jetbrains-vimrc ;; \
     shell) ./shell/sync.sh ;; \
     hammerspoon) just hammerspoon-sync ;; \
+    zellij) ./zellij/sync.sh ;; \
     *) echo "Unknown package: {{package}}" >&2; echo "Try: just packages" >&2; exit 1 ;; \
   esac
 

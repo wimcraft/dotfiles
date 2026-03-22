@@ -1,0 +1,37 @@
+layout {
+default_tab_template {
+    pane size=1 borderless=true {
+        plugin location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm" {
+            format_left  "{mode}#[fg=#89B4FA,bg=#181825,bold] {tabs}"
+            format_right "{command_uptime}#[fg=0,bg=10]{datetime}"
+            // format_space "#[bg=10]"
+
+
+            mode_normal "#[fg=0,bg=10] λ "
+            mode_tmux   "#[fg=0,bg=#89B4FA] λ "
+            mode_locked "#[fg=0,bg=#FAB387] λG "
+
+            mode_default_to_mode "tmux"
+
+            hide_frame_for_single_pane "true"
+
+            tab_normal   "#[fg=#FFFFFF,bg=#45475A] {index} {name} "
+            tab_active   "#[fg=#FFFFFF,bg=#89B4FA,bold] {name}* "
+
+
+            datetime          " {format} "
+            datetime_format   "%H:%M %d-%b-%y"
+            datetime_timezone "Europe/Berlin"
+
+            command_uptime_command "bash -lc 'uptime | awk -F\"(up |,)\" \"{print \\$2}\"'"
+            command_uptime_format   "{stdout}"
+            command_uptime_interval "1"
+
+        }
+    }
+    children
+    pane size=1 borderless=true {
+        plugin location="zellij:status-bar"
+    }
+    }
+}
