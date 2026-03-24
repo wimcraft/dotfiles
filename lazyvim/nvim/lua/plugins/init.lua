@@ -128,6 +128,7 @@ return {
 			{ "<leader>on", "<cmd>Obsidian new<cr>", desc = "Obsidian new note" },
 			{ "<leader>os", "<cmd>Obsidian search<cr>", desc = "Obsidian search" },
 			{ "<leader>oq", "<cmd>Obsidian quick_switch<cr>", desc = "Obsidian quick switch" },
+			{ "<leader>ob", "<cmd>Obsidian backlinks<cr>", desc = "Obsidian backlinks" },
 		},
 		opts = {
 			legacy_commands = false,
