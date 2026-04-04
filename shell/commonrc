@@ -26,6 +26,7 @@ alias egrep='egrep --color=auto'
 alias k='kubectl'
 alias t='todo.sh'
 alias nvim='LC_TIME=C nvim'
+alias lg='lazygit'
 alias docker-compose='docker compose'
 alias gsb='git status -sb'
 alias gss='git status -s'
@@ -39,6 +40,7 @@ alias ggu='git pull --rebase origin $(current_branch)'
 # Zellij aliases
 alias zj='zellij'                                       # Short alias
 alias zzz='zellij -l tmux'                              # Start with tmux layout
+alias zb='zellij -l simple'                              # Start with tmux layout
 alias zls='zellij ls'                                   # List sessions
 alias zat='zellij attach $(zellij ls -s | fzf)'         # Attach with fzf
 alias zclean='zellij delete-all-sessions -y'            # Delete all dead sessions

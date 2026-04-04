@@ -145,11 +145,22 @@ return {
 				-- date_format uses moment.js syntax (YYYY/MM/DD), not strftime (%Y/%m/%d)
 				date_format = "YYYY/MM-MMMM/YYYY-MM-DD-dddd", -- will create subfolders automatically
 				alias_format = "MMMM D, YYYY",
-				template = "Daily-note-template.md",
+				template = "daily.nvim.t.md",
 			},
 
 			templates = {
-				folder = "Resources/Templates",
+				folder = "Zulo/templates",
+				substitutions = {
+					created = function()
+						return os.date("%Y-%m-%d,%H:%M")
+					end,
+					daily_heading = function()
+						return os.date("%A, %B %d, %Y")
+					end,
+					daily_carpe = function()
+						return os.date("%B %d")
+					end,
+				},
 			},
 
 			frontmatter = { enabled = false },

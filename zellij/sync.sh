@@ -34,6 +34,40 @@ backup_zellij_if_needed() {
   fi
 }
 
+zellij_cache_dir() {
+  if [[ "$(uname)" == "Darwin" ]]; then
+    echo "${HOME}/Library/Caches/org.Zellij-Contributors.Zellij"
+  else
+    echo "${XDG_CACHE_HOME:-${HOME}/.cache}/zellij"
+  fi
+}
+
+ZJSTATUS_VERSION="v0.21.1"
+ZJSTATUS_URL="https://github.com/dj95/zjstatus/releases/download/${ZJSTATUS_VERSION}/zjstatus.wasm"
+ZJSTATUS_DEST="${HOME}/.config/zellij/plugins/zjstatus.wasm"
+
+download_plugins() {
+  if [[ -f "$ZJSTATUS_DEST" ]]; then
+    echo "• zjstatus already present, skipping download"
+    return
+  fi
+  echo "Downloading zjstatus ${ZJSTATUS_VERSION}..."
+  mkdir -p "$(dirname "$ZJSTATUS_DEST")"
+  curl -fsSL "$ZJSTATUS_URL" -o "$ZJSTATUS_DEST"
+  echo "✓ Downloaded zjstatus -> $ZJSTATUS_DEST"
+}
+
+install_permissions() {
+  local cache_dir
+  cache_dir="$(zellij_cache_dir)"
+  local dest="${cache_dir}/permissions.kdl"
+  local template="${SCRIPT_DIR}/permissions.kdl.template"
+
+  mkdir -p "$cache_dir"
+  sed "s|{HOME}|${HOME}|g" "$template" > "$dest"
+  echo "✓ Installed plugin permissions -> $dest"
+}
+
 main() {
   require_cmd stow
 
@@ -44,6 +78,9 @@ main() {
     cd "$REPO_ROOT"
     stow --target "$TARGET_DIR" "$PACKAGE_NAME"
   )
+
+  download_plugins
+  install_permissions
 
   echo "✓ Sync complete"
 }

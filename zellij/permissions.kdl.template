@@ -1,0 +1,5 @@
+"{HOME}/.config/zellij/plugins/zjstatus.wasm" {
+    RunCommands
+    ReadApplicationState
+    ChangeApplicationState
+}

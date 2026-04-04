@@ -6,10 +6,13 @@ hs.execute(
 -- Export env vars from shell to GUI apps via launchctl
 local envVars = { "OBSIDIAN_VAULT_PATH" }
 for _, name in ipairs(envVars) do
-	local value, status = hs.execute("zsh -lc 'echo $" .. name .. "'")
+	local value, status = hs.execute("zsh -ilc 'echo $" .. name .. "'")
 	value = value:gsub("%s+$", "")
 	if status and value ~= "" then
 		hs.execute("launchctl setenv " .. name .. " " .. hs.http.encodeForQuery(value))
+		print("launchctl setenv: " .. name .. "=" .. value)
+	else
+		print("launchctl setenv: skipped " .. name .. " (empty or error)")
 	end
 end
 
