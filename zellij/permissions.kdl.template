@@ -3,3 +3,8 @@
     ReadApplicationState
     ChangeApplicationState
 }
+
+"{HOME}/.config/zellij/plugins/room.wasm" {
+    ReadApplicationState
+    ChangeApplicationState
+}

@@ -46,15 +46,28 @@ ZJSTATUS_VERSION="v0.21.1"
 ZJSTATUS_URL="https://github.com/dj95/zjstatus/releases/download/${ZJSTATUS_VERSION}/zjstatus.wasm"
 ZJSTATUS_DEST="${HOME}/.config/zellij/plugins/zjstatus.wasm"
 
+ROOM_VERSION="v1.2.1"
+ROOM_URL="https://github.com/rvcas/room/releases/download/${ROOM_VERSION}/room.wasm"
+ROOM_DEST="${HOME}/.config/zellij/plugins/room.wasm"
+
 download_plugins() {
+  mkdir -p "$(dirname "$ZJSTATUS_DEST")"
+
   if [[ -f "$ZJSTATUS_DEST" ]]; then
     echo "• zjstatus already present, skipping download"
-    return
+  else
+    echo "Downloading zjstatus ${ZJSTATUS_VERSION}..."
+    curl -fsSL "$ZJSTATUS_URL" -o "$ZJSTATUS_DEST"
+    echo "✓ Downloaded zjstatus -> $ZJSTATUS_DEST"
   fi
-  echo "Downloading zjstatus ${ZJSTATUS_VERSION}..."
-  mkdir -p "$(dirname "$ZJSTATUS_DEST")"
-  curl -fsSL "$ZJSTATUS_URL" -o "$ZJSTATUS_DEST"
-  echo "✓ Downloaded zjstatus -> $ZJSTATUS_DEST"
+
+  if [[ -f "$ROOM_DEST" ]]; then
+    echo "• room already present, skipping download"
+  else
+    echo "Downloading room ${ROOM_VERSION}..."
+    curl -fsSL "$ROOM_URL" -o "$ROOM_DEST"
+    echo "✓ Downloaded room -> $ROOM_DEST"
+  fi
 }
 
 install_permissions() {
