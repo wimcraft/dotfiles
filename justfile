@@ -10,12 +10,14 @@ packages:
   @echo "shell"
   @echo "hammerspoon"
   @echo "zellij"
+  @echo "tmux"
 
 # Install a managed package.
 install package:
   case "{{package}}" in \
     lazyvim) ./lazyvim/install.sh ;; \
     jetbrains) just jetbrains-vimrc ;; \
+    tmux) ./tmux/install.sh ;; \
     *) echo "Unknown package: {{package}}" >&2; echo "Try: just packages" >&2; exit 1 ;; \
   esac
 
@@ -27,6 +29,7 @@ sync package:
     shell) ./shell/sync.sh ;; \
     hammerspoon) just hammerspoon-sync ;; \
     zellij) ./zellij/sync.sh ;; \
+    tmux) ./tmux/sync.sh ;; \
     *) echo "Unknown package: {{package}}" >&2; echo "Try: just packages" >&2; exit 1 ;; \
   esac
 
