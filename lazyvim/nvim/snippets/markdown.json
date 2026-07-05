@@ -1,0 +1,42 @@
+{
+  "Link": {
+    "prefix": "link",
+    "body": "[$1]($2)",
+    "description": "Markdown link [label](url)"
+  },
+  "Code Block": {
+    "prefix": "cb",
+    "body": ["```$1", "$2", "```"],
+    "description": "Fenced code block with language"
+  },
+  "Callout": {
+    "prefix": "callout",
+    "body": ["> [!${1|NOTE,TIP,WARNING,DANGER|}]", "> $2"],
+    "description": "Obsidian callout block"
+  },
+  "LTeX English": {
+    "prefix": "ltex-en",
+    "body": "<!-- LTeX: language=en-US -->",
+    "description": "LTeX: check following text as English (US)"
+  },
+  "LTeX German": {
+    "prefix": "ltex-de",
+    "body": "<!-- LTeX: language=de-DE -->",
+    "description": "LTeX: check following text as German"
+  },
+  "LTeX Polish": {
+    "prefix": "ltex-pl",
+    "body": "<!-- LTeX: language=pl-PL -->",
+    "description": "LTeX: check following text as Polish"
+  },
+  "LTeX Ukrainian": {
+    "prefix": "ltex-uk",
+    "body": "<!-- LTeX: language=uk-UA -->",
+    "description": "LTeX: check following text as Ukrainian"
+  },
+  "LTeX Disabled": {
+    "prefix": "ltex-off",
+    "body": "<!-- LTeX: enabled=false -->",
+    "description": "LTeX: disable checking from here on"
+  }
+}

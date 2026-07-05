@@ -63,3 +63,39 @@ keymap("x", "ar", "a[", opts)
 keymap("x", "ir", "i[", opts)
 keymap("x", "ac", "a{", opts)
 keymap("x", "ic", "i{", opts)
+
+vim.keymap.set("n", "<leader>ip", function() Snacks.image.hover() end, { desc = "Image preview" })
+
+-- Emacs-style M-x: fuzzy search all Ex commands
+vim.keymap.set("n", "<leader>;", function() Snacks.picker.commands() end, { desc = "Commands (M-x)" })
+vim.keymap.set({ "n", "i" }, "<M-x>", function() Snacks.picker.commands() end, { desc = "Commands (M-x)" })
+
+-- Obsidian vault backup: save all buffers, stage *.md, commit with timestamp, push
+vim.keymap.set("n", "<leader>oc", function()
+  local vault = os.getenv("OBSIDIAN_VAULT_PATH")
+  if not vault or vault:match("^%s*$") then
+    vim.notify("OBSIDIAN_VAULT_PATH is not set", vim.log.levels.ERROR)
+    return
+  end
+  vim.cmd("silent! wa")
+  local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+  local msg = "obsidian.nvim vault backup: " .. timestamp
+  vim.fn.system("git -C '" .. vault .. "' add -- '*.md'")
+  local commit_out = vim.fn.system("git -C '" .. vault .. "' commit -m '" .. msg .. "'")
+  if vim.v.shell_error ~= 0 then
+    vim.notify("Nothing to commit\n" .. commit_out, vim.log.levels.WARN)
+    return
+  end
+  vim.notify("Committed: " .. msg .. "\nPushing...", vim.log.levels.INFO)
+  vim.fn.jobstart("git -C '" .. vault .. "' push", {
+    on_exit = function(_, code)
+      vim.schedule(function()
+        if code == 0 then
+          vim.notify("Vault backup pushed", vim.log.levels.INFO)
+        else
+          vim.notify("Push failed (exit " .. code .. ")", vim.log.levels.ERROR)
+        end
+      end)
+    end,
+  })
+end, { desc = "Obsidian vault backup" })

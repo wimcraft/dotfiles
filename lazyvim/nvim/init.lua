@@ -16,6 +16,28 @@ vim.keymap.set("v", "<c-Y>", '"+y')
 vim.keymap.set("i", "<c-l>", "<c-^>")
 vim.keymap.set("n", "<leader>fu", "gr")
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true, silent = true, desc = "Exit terminal mode" })
+vim.keymap.set("i", ";;", "<Esc>", { noremap = true, silent = true, desc = "Exit insert mode" })
+vim.keymap.set("n", "zl", function()
+	local word = vim.fn.expand("<cword>")
+	local suggestions = vim.fn.spellsuggest(word)
+	local pos = vim.fn.getpos(".")
+	vim.ui.select(suggestions, { prompt = 'Change "' .. word .. '" to:' }, function(choice)
+		if choice then
+			vim.fn.setpos(".", pos)
+			vim.cmd("normal! ciw" .. choice)
+			vim.cmd("stopinsert")
+		end
+	end)
+end, { silent = true, desc = "Spelling fix (overwrites scroll-right)" })
+vim.keymap.set("i", "<C-q>", "<Esc>:wq<CR>", { noremap = true, silent = true, desc = "Save and quit" })
+
+-- Auto-enter insert mode for discordo temp files
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+	pattern = "/private/var/folders/*/T/discordo_*",
+	callback = function()
+		vim.cmd("startinsert")
+	end,
+})
 vim.opt.keymap = "ukrainian-enhanced"
 vim.opt.iminsert = 0
 vim.opt.imsearch = 0
