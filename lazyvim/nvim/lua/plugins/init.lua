@@ -42,7 +42,92 @@ return {
 		-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
-		opts = {},
+		opts = {
+			-- Tables in these notes are hand-padded with spaces to align pipes.
+			-- 'trimmed' subtracts that manual padding from the width calc, so wide
+			-- tables stay as narrow as their real content instead of ballooning past
+			-- the window. Wide/`<br>`-heavy tables aren't readable inline regardless —
+			-- use the peek.nvim preview (<leader>mp) for those.
+			pipe_table = {
+				preset = "round", -- rounded box-drawing corners (╭─┬─╮ …)
+				cell = "trimmed",
+				style = "full",
+				alignment_indicator = "━",
+			},
+		},
+	},
+	-- Terminal render-markdown can't reflow `<br>`-heavy cells, wrap cell text, or
+	-- separate/shade rows — so dense wide tables stay hard to read. peek.nvim opens
+	-- a live HTML webview (deno-backed) that renders `<br>` as line breaks, wraps
+	-- cells, and draws bordered/shaded rows: the readable "Zed preview" look, in nvim.
+	-- Toggle with <leader>mp on a markdown buffer.
+	{
+		"toppair/peek.nvim",
+		event = { "VeryLazy" },
+		-- peek's webview is a separate deno window that doesn't forward keys to nvim,
+		-- so custom scroll/close keys must be injected into peek's own frontend. This
+		-- build hook patches app/src/webview.ts (idempotent via the __peekKeys marker)
+		-- to add ctrl+d/u half-page scroll + cmd+w/Escape close, then rebuilds. Runs on
+		-- every install/update, so the patch survives plugin upgrades.
+		build = function(plugin)
+			local path = plugin.dir .. "/app/src/webview.ts"
+			local f = assert(io.open(path, "r"))
+			local src = f:read("*a")
+			f:close()
+			if not src:find("__peekKeys", 1, true) then
+				local inject = [[
+
+// __peekKeys: custom keybindings injected by nvim config build hook.
+// ctrl+d / ctrl+u -> half-page scroll (peek's built-in plain d/u/g/G still work).
+// cmd+w or Escape -> close the preview window.
+webview.bind('__peekClose', () => {
+  Deno.exit(0);
+});
+webview.init(`
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && (e.key === 'd' || e.key === 'u')) {
+      e.preventDefault();
+      window.scrollBy({ top: (e.key === 'd' ? 1 : -1) * window.innerHeight / 2 });
+      return;
+    }
+    if ((e.metaKey && e.key === 'w') || e.key === 'Escape') {
+      e.preventDefault();
+      if (window.__peekClose) window.__peekClose();
+      return;
+    }
+  });
+`);
+
+webview.navigate(url);]]
+				src = src:gsub("webview%.navigate%(url%);", inject, 1)
+				local w = assert(io.open(path, "w"))
+				w:write(src)
+				w:close()
+			end
+			vim.system({ "deno", "task", "--quiet", "build:fast" }, { cwd = plugin.dir }):wait()
+		end,
+		config = function()
+			require("peek").setup({
+				app = "webview",
+				theme = "light",
+			})
+			vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
+			vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+		end,
+		keys = {
+			{
+				"<leader>mp",
+				function()
+					local peek = require("peek")
+					if peek.is_open() then
+						peek.close()
+					else
+						peek.open()
+					end
+				end,
+				desc = "Markdown preview (peek)",
+			},
+		},
 	},
 	{
 		-- Harpoon plugin configuration
