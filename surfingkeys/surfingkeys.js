@@ -111,6 +111,28 @@ mapkey('cT', 'Kagi: translate current page', function() {
 });
 addSearchAlias('k', 'kagi', 'https://kagi.com/search?q=', 's');
 
+// Tidy bookmarklets by Steph Ango, ported to Surfingkeys mapkeys
+// https://stephango.com/tidyurl
+// https://stephango.com/tidy
+mapkey('yu', 'Tidy URL: strip query string, copy & reload', function() {
+    const tidyUrl = window.location.href.split('?')[0];
+    Clipboard.write(tidyUrl);
+    window.location.href = tidyUrl;
+});
+mapkey(';r', 'Tidy Reader: distraction-free reading view', function() {
+    var jsCode = document.createElement('script');
+    jsCode.setAttribute('src', 'https://unpkg.com/defuddle@latest/dist/index.js');
+    jsCode.onload = function() {
+        var article = new Defuddle(document).parse();
+        document.children[0].innerHTML = article.content;
+        var styles = `@media (prefers-color-scheme: dark) {:root {--background: #222;--text: white;--text-muted: #999;}}@media (prefers-color-scheme: light) {:root {--background: white;--text: black;--text-muted: #666;}}* {font-family: -apple-system, BlinkMacSystemFont, "Inter", "IBM Plex Sans", Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;}code, pre {font-family: IBM Plex Mono, monospace;font-size: calc(1rem + 0.5vw);}html {box-sizing: border-box;width: 100%;height: 100%;font-size: 62.5%;background-color: var(--background) !important;}body {font-size: calc(1.6rem + 0.5vw);line-height: 1.8;margin: 0 auto;width: 40em;max-width: 88%;color: var(--text);background-color: var(--background);}.page {margin: 2rem auto;background: var(--background);padding: 0 0 20rem 0;}h1 {font-size: 44px !important;letter-spacing: -0.5px !important;line-height: 46px !important;margin: 22px 0 15px 0 !important;}h2 {font-size: 35px;line-height: 38px;font-weight: bold;}h3 {font-size: inherit;font-weight: bold;border-bottom: 1px solid #333;}ul {margin: 1rem;}ol {margin: 1rem;}video, img {max-width: 100%;}a {color: var(--text);text-decoration: underline;}a:visited {opacity: 0.6;color: var(--text-muted);}blockquote {margin: 0;padding: 0.1em 0 0.1em 2em;border-left: 2px solid #ccc;color: var(--text-muted);}pre {background-color: #ccc;padding: 1rem;}code {color: var(--text-muted);}pre > code {color: #333;}`;
+        var tidyStyle = document.createElement('style');
+        tidyStyle.innerText = styles;
+        document.head.appendChild(tidyStyle);
+    };
+    document.body.appendChild(jsCode);
+});
+
 // jira
 mapkey('<Alt-l>', 'Click Clear filters button', function() {
     // Find element by class and click it
