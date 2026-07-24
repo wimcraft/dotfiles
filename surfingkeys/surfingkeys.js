@@ -13,7 +13,10 @@ const {
     Normal,
     aceVimMap,
     iunmap,
-    imap
+    imap,
+    tabOpenLink,
+    addSearchAlias,
+    vmapkey
 } = api;
 settings.hintAlign = "left"
 // always use omnibar
@@ -84,6 +87,30 @@ mapkey('yD', 'Copy url as org-mode link', function() {
     `[[${window.location['href']}][${document.title}]]`,
   )
 });
+// Kagi
+mapkey(';ks', 'Kagi: summarize current page', function() {
+    tabOpenLink('https://kagi.com/summarizer/?url=' + encodeURIComponent(window.location.href));
+});
+mapkey(';kS', 'Kagi: summarize selection', function() {
+    const sel = window.getSelection().toString().trim();
+    const target = sel || window.location.href;
+    tabOpenLink('https://kagi.com/summarizer/?url=' + encodeURIComponent(target));
+});
+function kagiTranslateSelection() {
+    const sel = window.getSelection().toString().trim();
+    if (!sel) {
+        Front.showBanner('No selection');
+        return;
+    }
+    tabOpenLink('https://translate.kagi.com/?text=' + encodeURIComponent(sel));
+}
+mapkey('ct', 'Kagi: translate selection', kagiTranslateSelection);
+vmapkey('ct', 'Kagi: translate selection', kagiTranslateSelection);
+mapkey('cT', 'Kagi: translate current page', function() {
+    tabOpenLink('https://translate.kagi.com/' + window.location.href);
+});
+addSearchAlias('k', 'kagi', 'https://kagi.com/search?q=', 's');
+
 // jira
 mapkey('<Alt-l>', 'Click Clear filters button', function() {
     // Find element by class and click it
