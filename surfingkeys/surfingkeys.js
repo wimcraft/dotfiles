@@ -110,6 +110,10 @@ mapkey('cT', 'Kagi: translate current page', function() {
     tabOpenLink('https://translate.kagi.com/' + window.location.href);
 });
 addSearchAlias('k', 'kagi', 'https://kagi.com/search?q=', 's');
+// addSearchAlias always also binds bare 'ok' (Open Omnibar for kagi Search),
+// with no domain restriction - unmap it so it doesn't shadow 'o' on sites
+// that use it natively (e.g. RSS readers' "open article").
+unmap('ok');
 
 // Tidy bookmarklets by Steph Ango, ported to Surfingkeys mapkeys
 // https://stephango.com/tidyurl
