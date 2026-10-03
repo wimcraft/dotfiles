@@ -508,11 +508,11 @@ web_server false
 // A path to a certificate file to be used when setting up the web client to serve the
 // connection over HTTPs
 // 
-// web_server_cert "/home/rfist/.config/zellij/certs/thinkpad.tailb2f5d5.ts.net.crt"
+// web_server_cert "/home/wimcraft/.config/zellij/certs/thinkpad.tailb2f5d5.ts.net.crt"
 // A path to a key file to be used when setting up the web client to serve the
 // connection over HTTPs
 // 
-// web_server_key "/home/rfist/.config/zellij/certs/thinkpad.tailb2f5d5.ts.net.key"
+// web_server_key "/home/wimcraft/.config/zellij/certs/thinkpad.tailb2f5d5.ts.net.key"
 /// Whether to enforce https connections to the web server when it is bound to localhost
 /// (127.0.0.0/8)
 ///

@@ -1,5 +1,5 @@
 // permalink:
-// https://raw.githubusercontent.com/rfist/dotfiles/refs/heads/main/surfingkeys/surfingkeys.js
+// https://raw.githubusercontent.com/wimcraft/dotfiles/refs/heads/main/surfingkeys/surfingkeys.js
 const {
     unmapAllExcept,
     mapkey,
