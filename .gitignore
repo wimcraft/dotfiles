@@ -1,2 +1,16 @@
 tmux/.config/tmux/plugins/
 
+# ranger writes bytecode caches into its config dir (symlinked into the repo by stow)
+ranger/ranger/**/__pycache__/
+
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/proxieddb/
+.worktrees/
+
+# per-machine spelling dictionaries (ltex_extra picks, personal word lists)
+lazyvim/nvim/ltex/
+lazyvim/nvim/dict/

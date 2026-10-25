@@ -96,3 +96,30 @@ vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
 		apply_callouts_debounced(ev.buf)
 	end,
 })
+
+-- ltex (LanguageTool) autostart is gated by a `<!-- ltex: enable -->` marker
+-- comment (see servers.ltex.root_dir in lua/plugins/init.lua) so it doesn't
+-- attach to every markdown/text buffer. These commands start/stop it for the
+-- current buffer on demand, regardless of that marker.
+vim.api.nvim_create_user_command("LtexEnable", function()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local base = vim.lsp.config.ltex
+	if not base then
+		vim.notify("ltex lsp config not found (is nvim-lspconfig loaded?)", vim.log.levels.ERROR)
+		return
+	end
+	local cfg = vim.deepcopy(base)
+	cfg.root_dir = vim.fs.root(bufnr, { ".git" }) or vim.fn.getcwd()
+	vim.lsp.start(cfg, { bufnr = bufnr })
+end, { desc = "Force-start ltex (LanguageTool) for the current buffer" })
+
+vim.api.nvim_create_user_command("LtexDisable", function()
+	local bufnr = vim.api.nvim_get_current_buf()
+	for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr, name = "ltex" })) do
+		vim.lsp.buf_detach_client(bufnr, client.id)
+	end
+end, { desc = "Stop ltex (LanguageTool) for the current buffer" })
+
+-- :Unwrap — join hard-wrapped prose paragraphs back into one line each.
+-- Defines the command on load; see lua/unwrap.lua for what it leaves alone.
+require("unwrap")

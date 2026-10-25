@@ -43,6 +43,9 @@ return {
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
 		opts = {
+			-- The CodeCompanion chat buffer is markdown under the filetype
+			-- `codecompanion`; render-markdown only decorates `markdown` by default.
+			file_types = { "markdown", "codecompanion" },
 			-- Tables in these notes are hand-padded with spaces to align pipes.
 			-- 'trimmed' subtracts that manual padding from the width calc, so wide
 			-- tables stay as narrow as their real content instead of ballooning past
@@ -105,6 +108,14 @@ webview.navigate(url);]]
 				w:close()
 			end
 			vim.system({ "deno", "task", "--quiet", "build:fast" }, { cwd = plugin.dir }):wait()
+			-- Hide the patch from git instead of committing it. Lazy's dirty-check
+			-- (`git ls-files -d -m`) skips skip-worktree files, so updates aren't blocked,
+			-- and HEAD stays on the upstream commit, so the update checker doesn't report
+			-- the plugin as perpetually outdated (a local commit made HEAD differ from the
+			-- target). If an upstream change ever touches this file, the update's checkout
+			-- will refuse; then run `git update-index --no-skip-worktree app/src/webview.ts`
+			-- and `git checkout app/src/webview.ts` in the plugin dir, and update again.
+			vim.system({ "git", "update-index", "--skip-worktree", "app/src/webview.ts" }, { cwd = plugin.dir }):wait()
 		end,
 		config = function()
 			require("peek").setup({
@@ -274,6 +285,17 @@ webview.navigate(url);]]
 			},
 
 			frontmatter = { enabled = false },
+			-- Obsidian Sync via the obsidian-headless CLI (`ob`).
+			-- Manual trigger: the desktop app syncs the same vault, so this is a
+			-- second Sync client on one folder. Nothing runs unless asked for.
+			sync = {
+				enabled = true,
+				trigger = "manual",
+				-- Zulo/media is WebDAV-synced and excluded in the desktop app.
+				-- The CLI keeps its own config, so it must be excluded here too:
+				-- every :Obsidian sync pushes these opts into `ob sync-config`.
+				excluded_folders = { "Zulo/media" },
+			},
 			ui = {
 				enable = false,
 			},
@@ -312,6 +334,11 @@ webview.navigate(url);]]
 				split_width_percentage = 0.40,
 				snacks_win_opts = {
 					-- no `position` key -> snacks uses split_side (a real split, not a float)
+					-- suppress the "id: term_title" bar snacks auto-adds to split
+					-- terminals, so it's a plain split like vim-claude-code's.
+					wo = {
+						winbar = "",
+					},
 					keys = {
 						claude_hide = {
 							"<C-,>",
@@ -342,7 +369,7 @@ webview.navigate(url);]]
 		},
 		keys = {
 			{ "<C-,>", "<cmd>ClaudeCodeFocus<cr>", desc = "Toggle Claude", mode = { "n", "x" } },
-			{ "<leader>a", "<cmd>ClaudeCodeFocus<cr>", desc = "Toggle Claude" },
+			{ "<leader>a", group = "ai" },
 			{ "<leader>ac", "<cmd>ClaudeCodeChat<cr>", desc = "Claude new chat" },
 			{ "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
 			{ "<leader>aa", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add file to Claude" },
@@ -354,7 +381,15 @@ webview.navigate(url);]]
 		"stevearc/oil.nvim",
 		---@module 'oil'
 		---@type oil.SetupOpts
-		opts = {},
+		-- <C-h> goes up (Oil's default horizontal split moves to "-", like tmux's split key)
+		opts = {
+			keymaps = {
+				["<C-h>"] = { "actions.parent", mode = "n" },
+				["<BS>"] = { "actions.parent", mode = "n" },
+				["-"] = { "actions.select", opts = { horizontal = true }, desc = "Open in horizontal split" },
+			},
+		},
+		keys = { { "go", "<cmd>Oil<cr>", desc = "Open Oil" } },
 		-- Optional dependencies
 		dependencies = { { "nvim-mini/mini.icons", opts = {} } },
 		-- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
@@ -441,8 +476,30 @@ webview.navigate(url);]]
 		"neovim/nvim-lspconfig",
 		dependencies = { "barreiroleo/ltex_extra.nvim" },
 		opts = {
+			-- Keep folding on treesitter's foldexpr. LazyVim swaps foldexpr to
+			-- vim.lsp.foldexpr() the moment an attached server's first
+			-- textDocument/foldingRange response comes back (vtsls advertises this
+			-- for ts/tsx). Until that first response lands, vim.lsp.foldexpr()
+			-- returns 0 for every line, so zc/zm error "no fold found" even though
+			-- treesitter's own folds are fine. Disabling this avoids the race
+			-- entirely instead of only having it show up right after opening a file.
+			folds = { enabled = false },
 			servers = {
 				ltex = {
+					-- Gate autostart: without this, ltex attaches to every buffer of its
+					-- (many) default filetypes, e.g. markdown, on open. Only start it
+					-- automatically for files that opt in via a `<!-- ltex: enable -->`
+					-- comment in the first 10 lines. Anything else needs `:LtexEnable`
+					-- (see nvim/lua/config/autocmds.lua) to start it for that buffer only.
+					root_dir = function(bufnr, on_dir)
+						local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 10, false)
+						for _, line in ipairs(lines) do
+							if line:match("<!%-%-%s*ltex:%s*enable%s*%-%->") then
+								on_dir(vim.fs.root(bufnr, { ".git" }) or vim.fn.getcwd())
+								return
+							end
+						end
+					end,
 					on_attach = function(_, _)
 						require("ltex_extra").setup({
 							load_langs = { "en-US", "de-DE" },
@@ -472,5 +529,4 @@ webview.navigate(url);]]
 			},
 		},
 	},
-	{ "wakatime/vim-wakatime", lazy = false },
 }

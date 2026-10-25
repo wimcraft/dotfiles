@@ -42,13 +42,32 @@ vim.opt.keymap = "ukrainian-enhanced"
 vim.opt.iminsert = 0
 vim.opt.imsearch = 0
 vim.opt.lbr = true
+-- LazyVim lowers this to 300ms; prose input mappings like ;pa need a calmer window.
+vim.opt.timeoutlen = 1000
 -- default colorscheme
 vim.cmd("colorscheme tokyonight-storm")
+-- Toggle between Solarized Light and TokyoNight Storm (<leader>ub in LazyVim
+-- only flips vim.o.background, which solarized-osaka won't re-render from).
+vim.keymap.set("n", "<leader>uC", function()
+	if vim.g.colors_name == "solarized-osaka" then
+		vim.o.background = "dark"
+		vim.cmd.colorscheme("tokyonight-storm")
+	else
+		vim.o.background = "light"
+		vim.cmd.colorscheme("solarized-osaka")
+	end
+end, { desc = "Toggle theme (Solarized Light / TokyoNight)" })
 
 if vim.g.neovide then
 	vim.keymap.set({ "n", "v" }, "<C-+>", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>")
 	vim.keymap.set({ "n", "v" }, "<C-->", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>")
 	vim.keymap.set({ "n", "v" }, "<C-0>", ":lua vim.g.neovide_scale_factor = 1<CR>")
+	-- macOS cmd key isn't mapped by Neovide; wire up system clipboard shortcuts
+	vim.keymap.set("v", "<D-c>", '"+y')
+	vim.keymap.set({ "n", "v" }, "<D-v>", '"+p')
+	vim.keymap.set("i", "<D-v>", "<C-r>+")
+	vim.keymap.set("c", "<D-v>", "<C-r>+")
+	vim.keymap.set("t", "<D-v>", '<C-\\><C-n>"+pi')
 end
 
 -- vim.cmd("lmap F	А| lmap <	Б| lmap D	В|")

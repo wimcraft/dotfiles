@@ -6,12 +6,24 @@
   },
   "Code Block": {
     "prefix": "cb",
-    "body": ["```$1", "$2", "```"],
+    "body": [
+      "```$1",
+      "$2",
+      "```"
+    ],
     "description": "Fenced code block with language"
+  },
+  "Checkbox": {
+    "prefix": "td",
+    "body": "- [ ] $0",
+    "description": "Markdown checkbox item"
   },
   "Callout": {
     "prefix": "callout",
-    "body": ["> [!${1|NOTE,TIP,WARNING,DANGER|}]", "> $2"],
+    "body": [
+      "> [!${1|NOTE,TIP,WARNING,DANGER|}]",
+      "> $2"
+    ],
     "description": "Obsidian callout block"
   },
   "LTeX English": {
